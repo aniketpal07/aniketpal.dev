@@ -1,0 +1,44 @@
+---
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('logs')).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+const latest = posts[0];
+
+const dateline = latest.data.date.toLocaleDateString('en-US', {
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric',
+});
+
+// First two sentences of the body, with markdown syntax stripped.
+const excerpt = latest.body
+  .replace(/^#+\s.*$/gm, '')
+  .replace(/^>\s?/gm, '')
+  .replace(/[*_`]/g, '')
+  .trim()
+  .split(/(?<=[.!?])\s+/)
+  .slice(0, 2)
+  .join(' ');
+---
+
+<article class="flex flex-col border border-rule-soft bg-card p-4">
+  <h3 class="mb-3 border-b border-rule-soft pb-2 font-mono text-[0.62rem] uppercase tracking-[0.25em]">
+    ❖ Editor's Pick · Latest Log
+  </h3>
+  <p class="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-ink-soft">
+    {latest.data.category} · {dateline}
+  </p>
+  <h4 class="mt-1 font-display text-lg font-bold leading-snug">
+    <a href={`/logs/${latest.slug}`} class="transition-colors hover:text-accent">
+      {latest.data.title}
+    </a>
+  </h4>
+  <p class="mt-2 text-[0.85rem] leading-relaxed text-ink-soft">{excerpt}</p>
+  <p class="mt-auto pt-3 font-mono text-[0.65rem] uppercase tracking-widest">
+    <a href={`/logs/${latest.slug}`} class="text-accent underline underline-offset-4">
+      Continue reading →
+    </a>
+  </p>
+</article>

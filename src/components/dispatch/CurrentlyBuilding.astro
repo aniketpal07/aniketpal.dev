@@ -1,0 +1,29 @@
+---
+import { currentlyBuilding } from '../../data/currently-building';
+
+const started = new Date(currentlyBuilding.startedDate).toLocaleDateString('en-US', {
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric',
+});
+---
+
+<article class="flex flex-col border border-rule-soft bg-card p-4">
+  <h3 class="mb-3 border-b border-rule-soft pb-2 font-mono text-[0.62rem] uppercase tracking-[0.25em]">
+    ✎ From the Newsroom · Currently Building
+  </h3>
+  <p class="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-ink-soft">
+    In progress since {started}
+  </p>
+  <h4 class="mt-1 font-display text-lg font-bold leading-snug">{currentlyBuilding.project}</h4>
+  <p class="mt-2 text-[0.85rem] leading-relaxed text-ink-soft">
+    {currentlyBuilding.description}
+  </p>
+  <div class="mt-auto flex flex-wrap gap-2 pt-3">
+    {currentlyBuilding.stack.map((s) => (
+      <span class="border border-rule-soft px-2 py-0.5 font-mono text-[0.6rem] uppercase tracking-widest">
+        {s}
+      </span>
+    ))}
+  </div>
+</article>
