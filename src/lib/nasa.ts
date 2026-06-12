@@ -5,6 +5,7 @@ export interface Apod {
   explanation: string;
   date: string;
   media_type: 'image' | 'video' | string;
+  copyright?: string;
 }
 
 /**

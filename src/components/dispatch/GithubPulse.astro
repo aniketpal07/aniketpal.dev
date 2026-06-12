@@ -3,11 +3,16 @@ import { fetchRecentPushes } from '../../lib/github';
 
 const pushes = await fetchRecentPushes(3);
 
-function relative(dateStr: string): string {
-  const days = Math.floor((Date.now() - new Date(dateStr).getTime()) / 86400000);
-  if (days <= 0) return 'today';
-  if (days === 1) return 'yesterday';
-  return `${days}d ago`;
+function fmtDate(dateStr: string): string {
+  return new Date(dateStr).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+}
+
+function truncate(message: string): string {
+  return message.length > 60 ? `${message.slice(0, 60)}…` : message;
 }
 ---
 
@@ -19,20 +24,22 @@ function relative(dateStr: string): string {
     <ul class="flex flex-1 flex-col">
       {pushes.map((p) => (
         <li class="border-b border-rule-soft py-2 last:border-b-0">
-          <a href={p.url} class="font-mono text-[0.68rem] font-medium text-accent">
-            {p.repo}
-          </a>
-          <p class="mt-0.5 text-[0.85rem] leading-snug">{p.message}</p>
+          <p class="font-mono text-[0.68rem] font-medium">
+            <span class="text-accent">→</span>
+            <a href={p.repoUrl} class="text-accent transition-colors hover:underline">
+              {p.repoName}
+            </a>
+          </p>
+          <p class="mt-0.5 text-[0.85rem] leading-snug">{truncate(p.message)}</p>
           <p class="mt-0.5 font-mono text-[0.6rem] uppercase tracking-widest text-ink-soft">
-            {relative(p.date)}
+            {fmtDate(p.date)}
           </p>
         </li>
       ))}
     </ul>
   ) : (
     <p class="text-[0.88rem] italic leading-relaxed text-ink-soft">
-      The wire is quiet — no recent public pushes found. Check
-      <code class="font-mono not-italic"> GITHUB_USERNAME</code> and rebuild.
+      No recent pushes. The builder is thinking.
     </p>
   )}
 </article>

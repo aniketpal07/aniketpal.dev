@@ -17,7 +17,7 @@ import { projects } from '../data/projects';
     Everything here was built to answer a question, usually the question of what some piece of
     infrastructure is actually doing when nobody is watching. Click any story to unfold it.
   </p>
-  <section class="grid grid-cols-1 gap-5 md:grid-cols-2">
+  <section class="grid grid-cols-1 items-start gap-5 md:grid-cols-2">
     {projects.map((project) => <ProjectCard project={project} />)}
   </section>
   <Footer />
