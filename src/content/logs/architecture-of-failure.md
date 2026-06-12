@@ -3,6 +3,9 @@ title: 'The Architecture of Failure'
 description: 'Systems do not fail at their weakest point. They fail at the point nobody thought to make weak on purpose.'
 date: 2026-05-28
 category: LABS
+# TODO: add a real image at public/images/posts/architecture-of-failure.jpg
+heroImage: '/images/posts/architecture-of-failure.jpg'
+heroImageCaption: 'A fuse is the one failure you designed.'
 ---
 
 Every system you have ever admired is a catalogue of failures someone decided to survive. The retry loop exists because a network call once vanished into silence. The circuit breaker exists because the retry loop, multiplied by ten thousand clients, once became the outage. We like to talk about architecture as if it were a discipline of construction. It is mostly a discipline of demolition planning.

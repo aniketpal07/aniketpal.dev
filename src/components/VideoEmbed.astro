@@ -1,0 +1,38 @@
+---
+interface Props {
+  /** YouTube URL (watch, embed, shorts, or youtu.be) or a direct video file URL */
+  src: string;
+  caption?: string;
+}
+
+const { src, caption } = Astro.props;
+
+function youtubeId(url: string): string | null {
+  const match = url.match(
+    /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{11})/
+  );
+  return match ? match[1] : null;
+}
+
+const id = youtubeId(src);
+---
+
+<figure class="video-embed my-7">
+  {id ? (
+    <iframe
+      src={`https://www.youtube-nocookie.com/embed/${id}`}
+      title={caption ?? 'Embedded video'}
+      loading="lazy"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+      class="aspect-video"
+    ></iframe>
+  ) : (
+    <video src={src} controls preload="metadata"></video>
+  )}
+  {caption && (
+    <figcaption class="mt-2 text-center font-mono text-[0.62rem] uppercase tracking-[0.2em] text-ink-soft">
+      {caption}
+    </figcaption>
+  )}
+</figure>
