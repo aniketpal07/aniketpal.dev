@@ -82,7 +82,7 @@ function shortDate(d: Date): string {
 
   <!-- BUILD: top projects -->
   <SectionHeader kicker="From the workshop floor" title="The Builder's Desk" />
-  <section class="grid grid-cols-1 gap-6 md:grid-cols-2">
+  <section class="grid grid-cols-1 items-start gap-6 md:grid-cols-2">
     {topProjects.map((project) => <ProjectCard project={project} />)}
   </section>
   <p class="mt-6 text-center font-mono text-[0.68rem] uppercase tracking-widest">
