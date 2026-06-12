@@ -7,6 +7,10 @@ export interface Project {
   tags: string[];
   github?: string;
   docs?: string;
+  /** Path to a screenshot shown in the expanded card, e.g. /images/projects/devproxy.png */
+  screenshot?: string;
+  /** Slug of a related log entry, rendered as a "FURTHER READING" cross-reference */
+  relatedLogSlug?: string;
 }
 
 export const projects: Project[] = [
@@ -19,6 +23,9 @@ export const projects: Project[] = [
       'DevProxy is an HTTP/1.1 forward and reverse proxy built from raw sockets up. It runs a single-threaded epoll-based event loop per core, keeps upstream connections alive in a slab-allocated pool, and reloads configuration on SIGHUP without dropping in-flight requests. Structured access logs ship as newline-delimited JSON. Built to understand exactly what nginx does for me — and what it costs.',
     tags: ['C++17', 'epoll', 'Sockets', 'CMake'],
     github: 'https://github.com/aniketpal/devproxy',
+    // TODO: replace with a real screenshot at public/images/projects/devproxy.png
+    screenshot: '/images/projects/devproxy.png',
+    relatedLogSlug: 'architecture-of-failure',
   },
   {
     slug: 'bns-rag',
@@ -29,6 +36,9 @@ export const projects: Project[] = [
       'BNS RAG ingests biomedical literature, chunks it with section-aware splitting, embeds passages into ChromaDB, and serves grounded answers through a locally hosted Ollama model. A reranking stage filters retrieved passages before generation, and an evaluation harness scores every answer for citation faithfulness. The reranker cut hallucinated references by roughly 60% in testing.',
     tags: ['Python', 'Ollama', 'ChromaDB', 'FastAPI'],
     github: 'https://github.com/aniketpal/bns-rag',
+    // TODO: replace with a real screenshot at public/images/projects/bns-rag.png
+    screenshot: '/images/projects/bns-rag.png',
+    relatedLogSlug: 'flow-state',
   },
   {
     slug: 'distributed-cache',
@@ -39,6 +49,9 @@ export const projects: Project[] = [
       'A distributed key-value cache where nodes discover each other over a gossip layer and keys are placed via consistent hashing with virtual nodes, so adding a shard remaps only its slice of the ring. Supports per-key TTLs, LRU eviction under memory pressure, and a deliberately plain text protocol for debuggability. The interesting failures were never in the happy path — they were in what happens when a node disappears mid-rebalance.',
     tags: ['C++', 'Consistent Hashing', 'Gossip', 'TCP'],
     github: 'https://github.com/aniketpal/distributed-cache',
+    // TODO: replace with a real screenshot at public/images/projects/distributed-cache.png
+    screenshot: '/images/projects/distributed-cache.png',
+    relatedLogSlug: 'architecture-of-failure',
   },
   {
     slug: 'load-balancer',
@@ -49,5 +62,8 @@ export const projects: Project[] = [
       'A load balancer that speaks both raw TCP and HTTP, with pluggable scheduling strategies: round-robin, weighted round-robin, and least-connections. Active health checks eject unhealthy upstreams and readmit them after consecutive successes, with exponential backoff between probes. Built as the natural sequel to DevProxy — once you can move one request, the next question is how to move a million of them fairly.',
     tags: ['C++', 'Layer 4/7', 'Health Checks', 'Scheduling'],
     github: 'https://github.com/aniketpal/load-balancer',
+    // TODO: replace with a real screenshot at public/images/projects/load-balancer.png
+    screenshot: '/images/projects/load-balancer.png',
+    relatedLogSlug: 'myth-of-sisyphus',
   },
 ];

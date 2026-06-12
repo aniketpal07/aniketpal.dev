@@ -43,8 +43,7 @@ body {
   min-height: 100vh;
 }
 
-/* ── Newsprint texture: pure CSS (inline SVG turbulence + faint press lines),
-      no external image assets ─────────────────────────────────────────────── */
+/* ── Newsprint texture: pure CSS (inline SVG turbulence + faint press lines) ───── */
 body::before {
   content: '';
   position: fixed;
@@ -70,6 +69,160 @@ body::before {
 .section-rule {
   border-top: 3px double var(--rule);
   border-bottom: 1px solid var(--rule);
+}
+
+/* ── Page entrance ────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  .page-enter {
+    animation: page-enter 0.4s ease-out both;
+  }
+}
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── Infinity theme toggle ─────────────────────────────────────────────────── */
+.infinity-toggle {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  color: var(--ink);
+  line-height: 1;
+}
+html[data-theme='dark'] .infinity-toggle {
+  color: var(--accent);
+  text-shadow: 0 0 14px rgba(193, 68, 14, 0.55);
+}
+.infinity-toggle:hover {
+  transform: scale(1.15);
+}
+.infinity-glyph {
+  display: inline-block;
+}
+/* Tooltip */
+.infinity-toggle::after {
+  content: 'switch edition';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.62rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: lowercase;
+  white-space: nowrap;
+  color: var(--ink-soft);
+  text-shadow: none;
+  opacity: 0;
+  pointer-events: none;
+}
+.infinity-toggle:hover::after {
+  opacity: 1;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .infinity-toggle {
+    transition: transform 0.3s ease, color 0.3s ease, text-shadow 0.3s ease;
+  }
+  .infinity-toggle::after {
+    transition: opacity 0.2s ease;
+  }
+  /* Constant slow rotation on the glyph, paused on hover */
+  .infinity-glyph {
+    animation: infinity-spin 8s linear infinite;
+  }
+  .infinity-toggle:hover .infinity-glyph {
+    animation-play-state: paused;
+  }
+  /* Glow pulse on click (class added/removed by Masthead script) */
+  .infinity-toggle.pulsing {
+    animation: infinity-pulse 0.3s ease;
+  }
+}
+@keyframes infinity-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes infinity-pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.25);
+    text-shadow: 0 0 18px rgba(193, 68, 14, 0.8);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ── Nav links: no static underline; draw-in underline + color on hover ─────── */
+.nav-link {
+  position: relative;
+  text-decoration: none;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  height: 1px;
+  width: 0;
+  background: var(--accent);
+}
+.nav-link:hover {
+  color: var(--accent);
+}
+.nav-link:hover::after {
+  width: 100%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .nav-link {
+    transition: color 0.2s ease;
+  }
+  .nav-link::after {
+    transition: width 0.2s ease;
+  }
+}
+
+/* ── Log entry hover: title shifts right, date takes the accent ─────────────── */
+.log-entry .log-entry-title {
+  display: block;
+}
+.log-entry:hover .log-entry-title {
+  transform: translateX(4px);
+}
+.log-entry:hover .log-entry-date {
+  color: var(--accent);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .log-entry .log-entry-title {
+    transition: transform 0.2s ease;
+  }
+  .log-entry .log-entry-date {
+    transition: color 0.2s ease;
+  }
+}
+
+/* ── Dispatch bento cells: border warms to accent on hover ─────────────────── */
+.dispatch-grid > article:hover {
+  border-color: var(--accent);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .dispatch-grid > article {
+    transition: border-color 0.2s ease;
+  }
 }
 
 /* ── Editorial article body ────────────────────────────────────────────────── */
@@ -143,15 +296,76 @@ body::before {
   list-style: decimal;
 }
 
-/* ── Theme toggle glyphs ───────────────────────────────────────────────────── */
-html[data-theme='light'] .glyph-moon {
-  display: none;
+/* ── Editorial media: inline article images, hero image, video embeds ───────── */
+.article-body img {
+  display: block;
+  width: 100%;
+  margin: 1.75rem 0;
+  border: 1px solid var(--rule-soft);
 }
-html[data-theme='dark'] .glyph-sun {
-  display: none;
+.article-hero img {
+  width: 100%;
+  max-height: 480px;
+  object-fit: cover;
+  border: 1px solid var(--rule-soft);
+}
+.article-hero figcaption {
+  margin-top: 0.5rem;
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  text-align: center;
+}
+html[data-theme='light'] .article-hero img,
+html[data-theme='light'] .article-body img {
+  filter: sepia(0.25);
+}
+html[data-theme='dark'] .article-hero img,
+html[data-theme='dark'] .article-body img {
+  filter: saturate(0.6);
+}
+.video-embed iframe,
+.video-embed video {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--rule-soft);
 }
 
-/* ── Project card accordion (native <details>, no marker) ──────────────────── */
+/* ── Editor profile photo (homepage hero) ───────────────────────────────────── */
+.editor-photo img {
+  border: 1px solid var(--ink);
+  box-shadow: 2px 2px 0 var(--accent);
+}
+html[data-theme='light'] .editor-photo img {
+  filter: sepia(0.3);
+}
+html[data-theme='dark'] .editor-photo img {
+  filter: saturate(0.55);
+}
+.editor-photo img:hover {
+  transform: scale(1.02);
+}
+html[data-theme='light'] .editor-photo img:hover {
+  filter: sepia(0.08);
+}
+html[data-theme='dark'] .editor-photo img:hover {
+  filter: saturate(0.9);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .editor-photo img {
+    transition: transform 0.3s ease, filter 0.3s ease;
+  }
+}
+
+/* ── Theme-aware project screenshots ─────────────────────────────────────────── */
+html[data-theme='light'] .project-screenshot {
+  filter: sepia(0.2);
+}
+html[data-theme='dark'] .project-screenshot {
+  filter: saturate(0.65);
+}
+
+/* ── Project card accordion (native <details>) + hover lift ────────────────── */
 details.project-card summary {
   cursor: pointer;
   list-style: none;
@@ -164,6 +378,73 @@ details.project-card[open] .card-cta-closed {
 }
 details.project-card:not([open]) .card-cta-open {
   display: none;
+}
+details.project-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14);
+}
+@media (prefers-reduced-motion: no-preference) {
+  details.project-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+}
+
+/* ── Tech stack marquee: two counter-scrolling rows, pure CSS ───────────────── */
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+}
+.marquee {
+  overflow: hidden;
+}
+.marquee-track {
+  display: flex;
+  gap: 1.75rem;
+  width: max-content;
+  padding-right: 1.75rem;
+}
+.marquee-item {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  color: var(--ink-soft);
+}
+.marquee-item::before {
+  content: '●';
+  color: var(--accent);
+  font-size: 0.55em;
+  margin-right: 0.55em;
+  vertical-align: 0.15em;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .marquee-track {
+    animation: marquee-rtl 30s linear infinite;
+  }
+  .marquee-track.marquee-reverse {
+    animation-name: marquee-ltr;
+  }
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+}
+/* Row scrolling so content drifts left → right */
+@keyframes marquee-ltr {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+/* Row scrolling so content drifts right → left */
+@keyframes marquee-rtl {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 /* ── Darkroom lightbox: pure CSS via :target, no JS ────────────────────────── */

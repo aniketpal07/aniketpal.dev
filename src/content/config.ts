@@ -7,6 +7,8 @@ const logs = defineCollection({
     description: z.string(),
     date: z.coerce.date(),
     category: z.enum(['LABS', 'THOUGHTS']),
+    heroImage: z.string().optional(),
+    heroImageCaption: z.string().optional(),
   }),
 });
 

@@ -1,6 +1,4 @@
 ---
-import ThemeToggle from './ThemeToggle.astro';
-
 const today = new Date();
 const dateline = today.toLocaleDateString('en-US', {
   weekday: 'long',
@@ -19,30 +17,59 @@ const nav = [
 ];
 ---
 
-<header class="mb-8 border-b-4 border-double border-[var(--rule)] pb-4">
+<header class="mb-10 border-b-4 border-double border-[var(--rule)] pb-5">
   <div
-    class="mb-4 flex flex-col gap-1 border-b border-rule-soft pb-2 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-ink-soft sm:flex-row sm:items-center sm:justify-between"
+    class="mb-5 grid grid-cols-2 items-center border-b border-rule-soft pb-2 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-ink-soft sm:grid-cols-3"
   >
     <span>{dateline}</span>
-    <span class="hidden sm:inline">Edition No. {edition}</span>
-    <span class="flex items-center gap-3">
-      <span class="hidden md:inline">Printed on modern infrastructure</span>
-      <ThemeToggle />
-    </span>
+    <span class="hidden text-center sm:block">Edition No. {edition}</span>
+    <span aria-hidden="true"></span>
   </div>
   <div class="text-center">
-    <a href="/" class="inline-block">
-      <p class="font-display text-5xl font-black tracking-tight sm:text-7xl">∞ KaalNiti</p>
-    </a>
+    <p class="font-display text-5xl font-black tracking-tight sm:text-7xl">
+      <button
+        id="infinity-toggle"
+        type="button"
+        class="infinity-toggle"
+        aria-label="Switch edition — toggle between light and dark theme"
+      >
+        <span class="infinity-glyph" aria-hidden="true">∞</span>
+      </button>
+      <a href="/" class="align-baseline">KaalNiti</a>
+    </p>
     <p class="mt-2 font-mono text-[0.6rem] uppercase tracking-[0.3em] text-ink-soft sm:text-[0.65rem]">
       Systems · Time · Power · Failure — consequences over intent
     </p>
+    <p class="mt-2 font-mono text-[0.85rem] uppercase tracking-[0.2em] text-accent">
+      — Aniket Pal —
+    </p>
   </div>
   <nav
-    class="mt-4 flex flex-wrap justify-center gap-x-6 gap-y-1 border-y border-rule-soft py-2 font-mono text-[0.68rem] uppercase tracking-[0.25em] sm:gap-x-10"
+    class="mt-5 flex flex-wrap justify-center gap-x-6 gap-y-1 py-2 font-mono text-[0.68rem] uppercase tracking-[0.25em] sm:gap-x-10"
   >
     {nav.map((n) => (
-      <a href={n.href} class="transition-colors hover:text-accent">{n.label}</a>
+      <a href={n.href} class="nav-link">{n.label}</a>
     ))}
   </nav>
 </header>
+
+<script is:inline>
+  (function () {
+    var btn = document.getElementById('infinity-toggle');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      var root = document.documentElement;
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try {
+        localStorage.setItem('theme', next);
+      } catch (e) {
+        /* localStorage unavailable — theme still applies for this page view */
+      }
+      btn.classList.add('pulsing');
+    });
+    btn.addEventListener('animationend', function (e) {
+      if (e.animationName === 'infinity-pulse') btn.classList.remove('pulsing');
+    });
+  })();
+</script>

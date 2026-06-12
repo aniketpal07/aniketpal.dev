@@ -1,4 +1,5 @@
 ---
+import { getCollection } from 'astro:content';
 import type { Project } from '../data/projects';
 
 interface Props {
@@ -6,6 +7,13 @@ interface Props {
 }
 
 const { project } = Astro.props;
+
+// Resolve the related log's title for the FURTHER READING cross-reference box.
+let relatedTitle: string | null = null;
+if (project.relatedLogSlug) {
+  const posts = await getCollection('logs');
+  relatedTitle = posts.find((p) => p.slug === project.relatedLogSlug)?.data.title ?? null;
+}
 ---
 
 <details class="project-card border border-rule-soft bg-card p-5">
@@ -30,14 +38,35 @@ const { project } = Astro.props;
     </p>
   </summary>
   <div class="mt-4 border-t border-rule-soft pt-4">
+    {project.screenshot && (
+      <figure class="mb-4">
+        <img
+          src={project.screenshot}
+          alt={`${project.name} screenshot`}
+          class="project-screenshot w-full border border-rule-soft object-cover"
+          loading="lazy"
+        />
+        <figcaption class="mt-1 font-mono text-[0.6rem] uppercase tracking-widest text-ink-soft">
+          [ project screenshot ]
+        </figcaption>
+      </figure>
+    )}
     <p class="text-[0.95rem] leading-relaxed">{project.detail}</p>
     <div class="mt-4 flex gap-4 font-mono text-[0.7rem] uppercase tracking-widest">
       {project.github && (
-        <a class="text-accent underline underline-offset-4" href={project.github}>GitHub →</a>
+        <a class="nav-link text-accent" href={project.github}>GitHub →</a>
       )}
       {project.docs && (
-        <a class="text-accent underline underline-offset-4" href={project.docs}>Docs →</a>
+        <a class="nav-link text-accent" href={project.docs}>Docs →</a>
       )}
     </div>
+    {project.relatedLogSlug && relatedTitle && (
+      <a
+        href={`/logs/${project.relatedLogSlug}`}
+        class="mt-4 block border border-rule-soft bg-paper-deep p-3 font-mono text-[0.65rem] uppercase tracking-widest transition-colors hover:border-accent"
+      >
+        Further Reading → <span class="text-accent">{relatedTitle}</span>
+      </a>
+    )}
   </div>
 </details>

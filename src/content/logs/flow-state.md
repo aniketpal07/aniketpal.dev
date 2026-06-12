@@ -3,6 +3,9 @@ title: 'Flow State'
 description: 'Flow is not a mood. It is a systems property — and like any systems property, it can be engineered.'
 date: 2026-06-02
 category: THOUGHTS
+# TODO: add a real image at public/images/posts/flow-state.jpg
+heroImage: '/images/posts/flow-state.jpg'
+heroImageCaption: 'A tight loop between intent, action, and signal.'
 ---
 
 We talk about flow as if it were weather — something that arrives, blesses an afternoon, and leaves without explanation. Four hours pass like one, the code pours out, and we credit inspiration. I have stopped believing in the weather theory. Flow looks much less like a mood and much more like a well-tuned feedback loop, and feedback loops have knobs.

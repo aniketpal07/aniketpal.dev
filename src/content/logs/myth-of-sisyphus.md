@@ -3,6 +3,9 @@ title: 'The Myth of Sisyphus'
 description: 'Camus never carried a pager, but he understood on-call better than most runbooks do.'
 date: 2026-04-19
 category: THOUGHTS
+# TODO: add a real image at public/images/posts/myth-of-sisyphus.jpg
+heroImage: '/images/posts/myth-of-sisyphus.jpg'
+heroImageCaption: 'The boulder is the curriculum.'
 ---
 
 Camus asked one question he considered serious: given that the boulder always rolls back down, why keep pushing? He was writing about the absurd — the gap between our demand for meaning and the universe's silence on the matter. He was not writing about software maintenance. And yet I have never read a better description of operating a production system.
