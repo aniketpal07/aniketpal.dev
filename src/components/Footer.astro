@@ -1,0 +1,23 @@
+---
+const links = [
+  { label: 'GitHub', href: 'https://github.com/aniketpal' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/aniketpal' },
+  { label: 'Email', href: 'mailto:hello@anikepal.dev' },
+  { label: 'Resume', href: '/resume.pdf' },
+];
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-16 border-t-4 border-double border-[var(--rule)] pb-8 pt-5 text-center">
+  <p class="font-display text-xl font-bold">∞ KaalNiti</p>
+  <nav class="mt-3 flex flex-wrap justify-center gap-x-6 gap-y-2 font-mono text-[0.65rem] uppercase tracking-[0.25em]">
+    {links.map((l) => (
+      <a class="underline underline-offset-4 transition-colors hover:text-accent" href={l.href}>
+        {l.label}
+      </a>
+    ))}
+  </nav>
+  <p class="mt-4 font-mono text-[0.6rem] uppercase tracking-[0.2em] text-ink-soft">
+    © {year} Aniket Pal · All editions, morning and midnight
+  </p>
+</footer>
