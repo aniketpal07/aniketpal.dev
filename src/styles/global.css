@@ -106,33 +106,9 @@ html[data-theme='dark'] .infinity-toggle {
 .infinity-glyph {
   display: inline-block;
 }
-/* Tooltip */
-.infinity-toggle::after {
-  content: 'switch edition';
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: 'JetBrains Mono', ui-monospace, monospace;
-  font-size: 0.62rem;
-  font-weight: 400;
-  letter-spacing: 0.15em;
-  text-transform: lowercase;
-  white-space: nowrap;
-  color: var(--ink-soft);
-  text-shadow: none;
-  opacity: 0;
-  pointer-events: none;
-}
-.infinity-toggle:hover::after {
-  opacity: 1;
-}
 @media (prefers-reduced-motion: no-preference) {
   .infinity-toggle {
     transition: transform 0.3s ease, color 0.3s ease, text-shadow 0.3s ease;
-  }
-  .infinity-toggle::after {
-    transition: opacity 0.2s ease;
   }
   /* Constant slow rotation on the glyph, paused on hover */
   .infinity-glyph {
@@ -389,62 +365,89 @@ details.project-card:hover {
   }
 }
 
-/* ── Tech stack marquee: two counter-scrolling rows, pure CSS ───────────────── */
-.marquee-mask {
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
-  mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
-}
-.marquee {
-  overflow: hidden;
-}
-.marquee-track {
+/* ── Tech stack icon bento grid ────────────────────────────────────────────── */
+.tech-cell {
+  position: relative;
+  width: 60px;
+  height: 60px;
   display: flex;
-  gap: 1.75rem;
-  width: max-content;
-  padding-right: 1.75rem;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid var(--rule-soft);
+  background: var(--paper-deep);
 }
-.marquee-item {
+.tech-icon {
+  width: 28px;
+  height: 28px;
+}
+/* Icons are served white; tint to dark ink in the morning edition */
+html[data-theme='light'] .tech-icon {
+  filter: invert(1) sepia(0.35) saturate(2) brightness(0.25);
+}
+.tech-glyph {
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--ink);
+}
+/* Hover “tape strip” with the technology name */
+.tech-tape {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 22px;
+  margin-top: -11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(193, 68, 14, 0.9);
+  color: #ffffff;
   font-family: 'JetBrains Mono', ui-monospace, monospace;
-  font-size: 0.7rem;
+  font-size: 0.55rem;
   letter-spacing: 0.08em;
+  text-transform: uppercase;
   white-space: nowrap;
-  color: var(--ink-soft);
+  transform: scaleX(0);
+  transform-origin: center;
 }
-.marquee-item::before {
-  content: '●';
-  color: var(--accent);
-  font-size: 0.55em;
-  margin-right: 0.55em;
-  vertical-align: 0.15em;
+.tech-cell:hover .tech-tape {
+  transform: scaleX(1);
 }
 @media (prefers-reduced-motion: no-preference) {
-  .marquee-track {
-    animation: marquee-rtl 30s linear infinite;
-  }
-  .marquee-track.marquee-reverse {
-    animation-name: marquee-ltr;
-  }
-  .marquee:hover .marquee-track {
-    animation-play-state: paused;
+  .tech-tape {
+    transition: transform 0.2s ease;
   }
 }
-/* Row scrolling so content drifts left → right */
-@keyframes marquee-ltr {
-  from {
-    transform: translateX(-50%);
-  }
-  to {
-    transform: translateX(0);
-  }
+
+/* ── Cosmos Watch modal (native <dialog>) ────────────────────────────────────── */
+.cosmos-modal {
+  padding: 0;
+  border: 1px solid var(--rule);
+  background: var(--card);
+  color: var(--ink);
+  max-width: min(46rem, 92vw);
+  max-height: 86vh;
 }
-/* Row scrolling so content drifts right → left */
-@keyframes marquee-rtl {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
+.cosmos-modal::backdrop {
+  background: rgba(0, 0, 0, 0.85);
+}
+.cosmos-modal-inner {
+  position: relative;
+  padding: 1.5rem;
+  max-height: 86vh;
+  overflow-y: auto;
+}
+.cosmos-close {
+  position: absolute;
+  top: 1.1rem;
+  right: 1.25rem;
+  color: var(--accent);
+  cursor: pointer;
+}
+.cosmos-close:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 /* ── Darkroom lightbox: pure CSS via :target, no JS ────────────────────────── */
