@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Masthead from '../components/Masthead.astro';
+import Footer from '../components/Footer.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import LogEntry from '../components/LogEntry.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('logs')).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+const labs = posts.filter((p) => p.data.category === 'LABS');
+const thoughts = posts.filter((p) => p.data.category === 'THOUGHTS');
+---
+
+<BaseLayout
+  title="Logs — KaalNiti"
+  description="Writing by Aniket Pal: technical essays (LABS) and philosophical dispatches (THOUGHTS)."
+>
+  <Masthead />
+  <SectionHeader kicker="The writing desk" title="The Logs" />
+  <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
+    <section id="labs" class="col-rule md:pr-8">
+      <h2 class="border-b-2 border-[var(--rule)] pb-2 font-display text-2xl font-bold uppercase tracking-[0.12em]">
+        Labs
+      </h2>
+      <p class="mt-2 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-ink-soft">
+        Technical essays · Systems, networks, failure
+      </p>
+      {labs.map((entry) => <LogEntry entry={entry} />)}
+      <p class="mt-4 font-mono text-[0.68rem] uppercase tracking-widest">
+        <a href="#labs" class="text-accent underline underline-offset-4">→ all labs posts</a>
+      </p>
+    </section>
+    <section id="thoughts">
+      <h2 class="border-b-2 border-[var(--rule)] pb-2 font-display text-2xl font-bold uppercase tracking-[0.12em]">
+        Thoughts
+      </h2>
+      <p class="mt-2 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-ink-soft">
+        Philosophical dispatches · Time, power, craft
+      </p>
+      {thoughts.map((entry) => <LogEntry entry={entry} />)}
+      <p class="mt-4 font-mono text-[0.68rem] uppercase tracking-widest">
+        <a href="#thoughts" class="text-accent underline underline-offset-4">→ all thoughts</a>
+      </p>
+    </section>
+  </div>
+  <Footer />
+</BaseLayout>

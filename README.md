@@ -1,93 +1,150 @@
-# aniiketpal-project
+# ∞ KaalNiti
 
+The personal site of **Aniket Pal** — Backend Engineer. An editorial, old-newspaper-styled
+portfolio built with [Astro](https://astro.build), TypeScript, and Tailwind CSS. Light mode is
+the morning edition; dark mode is the late night press run.
 
+> I write about systems, time, power, and failure. Backend engineering, architecture, and ideas
+> that don't care about intent — only consequences.
 
-## Getting started
+---
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## Running locally
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+### Prerequisites
 
-## Add your files
+- **Node.js 18.17+ or 20+** (check with `node --version`)
+- **npm 9+** (ships with Node)
 
-* [Create](https://docs.gitlab.com/user/project/repository/web_editor/#create-a-file) or [upload](https://docs.gitlab.com/user/project/repository/web_editor/#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+### 1. Clone and install
+
+```bash
+git clone https://gitlab.com/aniiketpal-group/aniiketpal-project.git kaalniti
+cd kaalniti
+npm install
+```
+
+### 2. Configure environment variables
+
+```bash
+cp .env.example .env
+```
+
+Then edit `.env`:
+
+| Variable | Required | Description |
+| --- | --- | --- |
+| `NASA_API_KEY` | Yes (“DEMO_KEY” works) | Powers the **COSMOS WATCH** widget. Get a free key at [api.nasa.gov](https://api.nasa.gov). `DEMO_KEY` works but is heavily rate-limited. |
+| `GITHUB_USERNAME` | Yes | Powers the **GITHUB PULSE** widget from your public events feed. No token needed. |
+
+Both widgets degrade gracefully (editorial fallback text) if a fetch fails, so a missing key
+never breaks the build.
+
+### 3. Start the dev server
+
+```bash
+npm run dev
+```
+
+Open **http://localhost:4321**. Astro hot-reloads on every file change.
+
+### 4. Production build & preview
+
+```bash
+npm run build     # outputs static site to ./dist
+npm run preview   # serves ./dist locally to verify the production build
+```
+
+Note: the live widgets (NASA, GitHub) are fetched **at build time**. Rebuild to refresh them.
+
+### Deploying to Vercel
+
+Import the repo in Vercel — it auto-detects Astro. Add `NASA_API_KEY` and `GITHUB_USERNAME`
+under *Project Settings → Environment Variables*, then deploy. No config changes needed.
+To refresh the live widgets daily, add a Vercel cron/deploy hook that triggers a rebuild.
+
+---
+
+## Editing content
+
+### Add a project
+
+Edit `src/data/projects.ts` and append a `Project` object:
+
+```ts
+{
+  slug: 'my-project',
+  name: 'My Project',
+  year: '2026',
+  lede: 'One-sentence newspaper lede.',
+  detail: 'Full description shown when the card unfolds.',
+  tags: ['C++', 'Linux'],
+  github: 'https://github.com/you/my-project', // optional
+  docs: 'https://docs.example.com',            // optional
+}
+```
+
+The first two projects in the array appear on the homepage; all appear on `/build`.
+
+### Add a log entry (blog post)
+
+Create a markdown file in `src/content/logs/`, e.g. `my-post.md`:
+
+```md
+---
+title: 'My Post Title'
+description: 'One-line description shown in indexes and under the headline.'
+date: 2026-07-01
+category: LABS   # or THOUGHTS
+---
+
+Your article body. The first paragraph gets a drop cap automatically.
+
+> Blockquotes render as editorial pull quotes with a left rule.
+```
+
+The filename becomes the URL slug (`/logs/my-post`). The newest post automatically becomes the
+homepage lead story and the **EDITOR'S PICK** widget.
+
+### Update “Currently Building”
+
+Edit `src/data/currently-building.ts` — change `project`, `description`, `stack`, and
+`startedDate` (`YYYY-MM-DD`).
+
+### Update the Darkroom photos
+
+Drop images into `public/darkroom/` and edit `src/data/darkroom.ts`, pointing each `src` at
+`/darkroom/your-file.jpg` with an `alt` and a `caption`. Three photos render as a contact
+sheet; clicking opens a pure-CSS lightbox.
+
+### Update the Now page
+
+Edit `src/pages/now.astro` directly — change the `lastUpdated` date and the Building /
+Reading / Thinking about sections.
+
+### Resume link
+
+The footer links to `/resume.pdf` — drop your resume at `public/resume.pdf`.
+
+---
+
+## Project structure
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/aniiketpal-group/aniiketpal-project.git
-git branch -M main
-git push -uf origin main
+src/
+├── layouts/        BaseLayout (theme system, fonts), ArticleLayout (drop cap, pull quotes)
+├── components/     Masthead, Footer, ProjectCard, LogEntry, SectionHeader, ThemeToggle
+│   └── dispatch/   The six bento-grid widgets on the homepage
+├── pages/          index, build, logs, now, logs/[slug]
+├── content/logs/   Markdown posts (Astro Content Collections)
+├── data/           projects, currently-building, darkroom configs
+├── lib/            NASA APOD + GitHub events fetch utilities
+└── styles/         global.css — theme variables, newsprint texture, editorial typography
 ```
 
-## Integrate with your tools
+## Theme system
 
-* [Set up project integrations](https://gitlab.com/aniiketpal-group/aniiketpal-project/-/settings/integrations)
-
-## Collaborate with your team
-
-* [Invite team members and collaborators](https://docs.gitlab.com/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/user/project/merge_requests/creating_merge_requests/)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/user/project/issues/managing_issues/#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/topics/autodevops/requirements/)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ci/environments/protected_environments/)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+The theme is set via `data-theme` on `<html>`, persisted in `localStorage`, with a blocking
+script in `BaseLayout.astro` that runs before first paint — zero flash. All colors are CSS
+custom properties in `src/styles/global.css`; the newsprint texture is pure CSS (inline SVG
+turbulence), no image assets.
