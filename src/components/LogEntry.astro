@@ -1,0 +1,26 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  entry: CollectionEntry<'logs'>;
+}
+
+const { entry } = Astro.props;
+const dateline = entry.data.date.toLocaleDateString('en-US', {
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric',
+});
+---
+
+<article class="border-b border-rule-soft py-4">
+  <p class="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-ink-soft">
+    {dateline} · {entry.data.category}
+  </p>
+  <h3 class="mt-1 font-display text-xl font-bold leading-snug">
+    <a href={`/logs/${entry.slug}`} class="transition-colors hover:text-accent">
+      {entry.data.title}
+    </a>
+  </h3>
+  <p class="mt-1 text-[0.92rem] text-ink-soft">{entry.data.description}</p>
+</article>

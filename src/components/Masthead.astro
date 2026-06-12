@@ -1,0 +1,48 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+
+const today = new Date();
+const dateline = today.toLocaleDateString('en-US', {
+  weekday: 'long',
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric',
+});
+// Edition number: days since the paper's founding date.
+const edition = Math.floor((today.getTime() - new Date('2024-01-01').getTime()) / 86400000);
+
+const nav = [
+  { href: '/', label: 'Front Page' },
+  { href: '/build', label: 'Build' },
+  { href: '/logs', label: 'Logs' },
+  { href: '/now', label: 'Now' },
+];
+---
+
+<header class="mb-8 border-b-4 border-double border-[var(--rule)] pb-4">
+  <div
+    class="mb-4 flex flex-col gap-1 border-b border-rule-soft pb-2 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-ink-soft sm:flex-row sm:items-center sm:justify-between"
+  >
+    <span>{dateline}</span>
+    <span class="hidden sm:inline">Edition No. {edition}</span>
+    <span class="flex items-center gap-3">
+      <span class="hidden md:inline">Printed on modern infrastructure</span>
+      <ThemeToggle />
+    </span>
+  </div>
+  <div class="text-center">
+    <a href="/" class="inline-block">
+      <p class="font-display text-5xl font-black tracking-tight sm:text-7xl">∞ KaalNiti</p>
+    </a>
+    <p class="mt-2 font-mono text-[0.6rem] uppercase tracking-[0.3em] text-ink-soft sm:text-[0.65rem]">
+      Systems · Time · Power · Failure — consequences over intent
+    </p>
+  </div>
+  <nav
+    class="mt-4 flex flex-wrap justify-center gap-x-6 gap-y-1 border-y border-rule-soft py-2 font-mono text-[0.68rem] uppercase tracking-[0.25em] sm:gap-x-10"
+  >
+    {nav.map((n) => (
+      <a href={n.href} class="transition-colors hover:text-accent">{n.label}</a>
+    ))}
+  </nav>
+</header>
