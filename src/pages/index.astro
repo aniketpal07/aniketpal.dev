@@ -1,104 +1,152 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Masthead from '../components/Masthead.astro';
-import Footer from '../components/Footer.astro';
-import SectionHeader from '../components/SectionHeader.astro';
-import ProjectCard from '../components/ProjectCard.astro';
-import CosmosWatch from '../components/dispatch/CosmosWatch.astro';
-import GithubPulse from '../components/dispatch/GithubPulse.astro';
-import LatestLog from '../components/dispatch/LatestLog.astro';
-import CurrentlyBuilding from '../components/dispatch/CurrentlyBuilding.astro';
-import TechStack from '../components/dispatch/TechStack.astro';
-import Darkroom from '../components/dispatch/Darkroom.astro';
-import { getCollection } from 'astro:content';
-import { projects } from '../data/projects';
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Masthead from "../components/Masthead.astro";
+import Footer from "../components/Footer.astro";
+import SectionHeader from "../components/SectionHeader.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import CosmosWatch from "../components/dispatch/CosmosWatch.astro";
+import GithubPulse from "../components/dispatch/GithubPulse.astro";
+import LatestLog from "../components/dispatch/LatestLog.astro";
+import CurrentlyBuilding from "../components/dispatch/CurrentlyBuilding.astro";
+import TechStack from "../components/dispatch/TechStack.astro";
+import Darkroom from "../components/dispatch/Darkroom.astro";
+import { getCollection } from "astro:content";
+import { projects } from "../data/projects";
 
-const posts = (await getCollection('logs')).sort(
-  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+const allPosts = await getCollection("logs");
+type LogEntry = (typeof allPosts)[number];
+
+const posts = allPosts.sort(
+    (a: LogEntry, b: LogEntry) => b.data.date.getTime() - a.data.date.getTime(),
 );
-const latestTwo = posts.slice(0, 2);
+const latestTwo: LogEntry[] = posts.slice(0, 2);
 const topProjects = projects.slice(0, 2);
 
 function shortDate(d: Date): string {
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    return d.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+    });
 }
 ---
 
 <BaseLayout title="∞ KaalNiti — Aniket Pal, Backend Engineer">
-  <Masthead />
+    <Masthead />
 
-  <!-- Hero: About the Editor -->
-  <section class="grid grid-cols-1 items-start gap-10 md:grid-cols-5">
-    <div class="md:col-span-3">
-      <p class="font-mono text-[0.62rem] uppercase tracking-[0.25em] text-accent">
-        The Editor in Chief
-      </p>
-      <h2 class="mt-3 font-display text-5xl font-black leading-tight sm:text-6xl">Aniket Pal</h2>
-      <p class="mt-3 font-display text-xl italic text-ink-soft">
-        Backend Engineer · Systems Thinker · Builder
-      </p>
-      <p class="mt-6 max-w-xl text-[1.02rem] leading-relaxed">
-        I build systems that don't apologize for being complex. Currently working at the
-        intersection of distributed infrastructure and AI — writing about what I find, what
-        breaks, and what that tells us about everything else.
-      </p>
-      <div class="mt-8 flex flex-wrap gap-8 font-mono text-[0.72rem] uppercase tracking-widest">
-        <a href="/build" class="nav-link text-accent">→ View the Work</a>
-        <a href="/logs" class="nav-link text-accent">→ Read the Logs</a>
-      </div>
-    </div>
-    <div class="md:col-span-2">
-      <figure class="editor-photo mx-auto max-w-sm">
-        <!-- TODO: add your profile photo at public/images/profile.jpg -->
-        <img src="/images/profile.jpg" alt="Aniket Pal" class="aspect-[4/5] w-full object-cover" loading="eager" />
-        <figcaption class="mt-3 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-ink-soft">
-          Aniket Pal · Delhi, India · Backend Engineer
-        </figcaption>
-      </figure>
-    </div>
-  </section>
+    <!-- Hero: About the Editor -->
+    <section class="grid grid-cols-1 items-start gap-10 md:grid-cols-5">
+        <div class="md:col-span-3">
+            <p
+                class="font-mono text-[0.62rem] uppercase tracking-[0.25em] text-accent"
+            >
+                The Editor in Chief
+            </p>
+            <h2
+                class="mt-3 font-display text-5xl font-black leading-tight sm:text-6xl"
+            >
+                Aniket Pal
+            </h2>
+            <p class="mt-3 font-display text-xl italic text-ink-soft">
+                Backend Engineer · Systems Thinker · Builder
+            </p>
+            <p class="mt-6 max-w-xl text-[1.02rem] leading-relaxed">
+                I design backend systems and AI pipelines that hold up when
+                things get messy — APIs under load, RAG that retrieves the right
+                thing, agents that don't spiral. Self-taught, project-driven,
+                and more interested in what breaks than what looks good in a
+                demo. Everything here — the builds, the logs, the failures — is
+                the real working record, not a highlight reel.
+            </p>
+            <div
+                class="mt-8 flex flex-wrap gap-8 font-mono text-[0.72rem] uppercase tracking-widest"
+            >
+                <a href="/build" class="nav-link text-accent">→ View the Work</a
+                >
+                <a href="/logs" class="nav-link text-accent">→ Read the Logs</a>
+            </div>
+        </div>
+        <div class="md:col-span-2">
+            <figure class="editor-photo mx-auto max-w-sm">
+                <!-- TODO: add your profile photo at public/images/profile.jpg -->
+                <img
+                    src="/images/profile.jpg"
+                    alt="Aniket Pal"
+                    class="aspect-[4/5] w-full object-cover"
+                    loading="eager"
+                />
+                <figcaption
+                    class="mt-3 font-mono text-[0.62rem] uppercase tracking-[0.2em] text-ink-soft"
+                >
+                    Aniket Pal · Delhi, India · Backend Engineer
+                </figcaption>
+            </figure>
+        </div>
+    </section>
 
-  <!-- Latest dispatches strip -->
-  <div
-    class="mt-12 flex flex-col items-baseline gap-3 border-y border-rule-soft py-4 sm:flex-row sm:gap-8"
-  >
-    <span class="shrink-0 font-mono text-[0.62rem] uppercase tracking-[0.25em] text-ink-soft">
-      Latest Dispatches
-    </span>
-    {latestTwo.map((p) => (
-      <a href={`/logs/${p.slug}`} class="group flex items-baseline gap-3">
-        <span class="font-display text-base font-bold leading-snug transition-colors group-hover:text-accent">
-          {p.data.title}
+    <!-- Latest dispatches strip -->
+    <div
+        class="mt-12 flex flex-col items-baseline gap-3 border-y border-rule-soft py-4 sm:flex-row sm:gap-8"
+    >
+        <span
+            class="shrink-0 font-mono text-[0.62rem] uppercase tracking-[0.25em] text-ink-soft"
+        >
+            Latest Dispatches
         </span>
-        <span class="font-mono text-[0.6rem] uppercase tracking-widest text-ink-soft">
-          {shortDate(p.data.date)}
-        </span>
-      </a>
-    ))}
-    <a href="/logs" class="nav-link font-mono text-[0.65rem] uppercase tracking-widest text-accent sm:ml-auto">
-      All logs →
-    </a>
-  </div>
+        {
+            latestTwo.map((p) => (
+                <a
+                    href={`/logs/${p.slug}`}
+                    class="group flex items-baseline gap-3"
+                >
+                    <span class="font-display text-base font-bold leading-snug transition-colors group-hover:text-accent">
+                        {p.data.title}
+                    </span>
+                    <span class="font-mono text-[0.6rem] uppercase tracking-widest text-ink-soft">
+                        {shortDate(p.data.date)}
+                    </span>
+                </a>
+            ))
+        }
+        <a
+            href="/logs"
+            class="nav-link font-mono text-[0.65rem] uppercase tracking-widest text-accent sm:ml-auto"
+        >
+            All logs →
+        </a>
+    </div>
 
-  <!-- BUILD: top projects -->
-  <SectionHeader kicker="From the workshop floor" title="The Builder's Desk" />
-  <section class="grid grid-cols-1 items-start gap-6 md:grid-cols-2">
-    {topProjects.map((project) => <ProjectCard project={project} />)}
-  </section>
-  <p class="mt-6 text-center font-mono text-[0.68rem] uppercase tracking-widest">
-    <a href="/build" class="nav-link text-accent">The complete project archive →</a>
-  </p>
+    <!-- BUILD: top projects -->
+    <SectionHeader
+        kicker="From the workshop floor"
+        title="The Builder's Desk"
+    />
+    <section class="grid grid-cols-1 items-start gap-6 md:grid-cols-2">
+        {topProjects.map((project) => <ProjectCard project={project} />)}
+    </section>
+    <p
+        class="mt-6 text-center font-mono text-[0.68rem] uppercase tracking-widest"
+    >
+        <a href="/build" class="nav-link text-accent"
+            >The complete project archive →</a
+        >
+    </p>
 
-  <!-- THE DISPATCH: bento grid -->
-  <SectionHeader kicker="Live wires & standing columns" title="The Dispatch" />
-  <section class="dispatch-grid grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-    <CosmosWatch />
-    <GithubPulse />
-    <LatestLog />
-    <CurrentlyBuilding />
-    <TechStack />
-    <Darkroom />
-  </section>
+    <!-- THE DISPATCH: bento grid -->
+    <SectionHeader
+        kicker="Live wires & standing columns"
+        title="The Dispatch"
+    />
+    <section
+        class="dispatch-grid grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+    >
+        <CosmosWatch />
+        <GithubPulse />
+        <LatestLog />
+        <CurrentlyBuilding />
+        <TechStack />
+        <Darkroom />
+    </section>
 
-  <Footer />
+    <Footer />
 </BaseLayout>
